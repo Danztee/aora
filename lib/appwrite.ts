@@ -17,13 +17,20 @@ export const config = {
   storageId: "666f05ec0012291d78d9",
 };
 
+const {
+  endpoint,
+  platform,
+  projectId,
+  databaseId,
+  userCollectionId,
+  videoCollectionId,
+  storageId,
+} = config;
+
 // Init your React Native SDK
 const client = new Client();
 
-client
-  .setEndpoint(config.endpoint)
-  .setProject(config.projectId)
-  .setPlatform(config.platform);
+client.setEndpoint(endpoint).setProject(projectId).setPlatform(platform);
 
 const account = new Account(client);
 const avatar = new Avatars(client);
@@ -49,8 +56,8 @@ export const createUser = async (
     await loginUser(email, password);
 
     const newUser = await database.createDocument(
-      config.databaseId,
-      config.userCollectionId,
+      databaseId,
+      userCollectionId,
       ID.unique(),
       {
         accountId: newAccount.$id,
@@ -83,8 +90,8 @@ export const getCurrentUser = async () => {
     if (!currentAccount) throw Error;
 
     const currentUser = await database.listDocuments(
-      config.databaseId,
-      config.userCollectionId,
+      databaseId,
+      userCollectionId,
       [Query.equal("accountId", currentAccount.$id)]
     );
 
@@ -93,5 +100,31 @@ export const getCurrentUser = async () => {
     return currentUser.documents[0];
   } catch (error) {
     console.log(error);
+  }
+};
+
+export const getAllPosts = async () => {
+  try {
+    const posts = await database.listDocuments(databaseId, videoCollectionId);
+    return posts.documents;
+  } catch (error: any) {
+    throw new Error();
+  }
+};
+
+export const getLatestPosts = async () => {
+  try {
+    const posts = await database.listDocuments(
+      databaseId,
+
+      //
+      videoCollectionId,
+
+      //@ts-ignore
+      [Query.orderDesc("$createdAt", Query.limit(7))]
+    );
+    return posts.documents;
+  } catch (error: any) {
+    throw new Error();
   }
 };
