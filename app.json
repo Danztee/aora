@@ -4,7 +4,7 @@
     "slug": "aora",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/logo-small.png",
+    "icon": "./assets/images/logo-square.png",
     "scheme": "aora",
     "userInterfaceStyle": "automatic",
     "splash": {
@@ -14,7 +14,8 @@
     },
     "ios": {
       "supportsTablet": true,
-      "package": "com.danztee.aora"
+      "package": "com.danztee.aora",
+      "bundleIdentifier": "com.danztee.aora"
     },
     "android": {
       "adaptiveIcon": {
@@ -51,7 +52,6 @@
       "eas": {
         "projectId": "6e660298-abd1-431e-b803-a14fbbd83ced"
       }
-    },
-    "jsEngine": "jsc"
+    }
   }
 }
