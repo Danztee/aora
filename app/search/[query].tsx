@@ -18,6 +18,7 @@ const Search = () => {
   useEffect(() => {
     refetch();
   }, []);
+
   return (
     <SafeAreaView className="bg-primary h-full">
       <FlatList

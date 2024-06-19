@@ -102,8 +102,8 @@ export const getCurrentUser = async () => {
     if (!currentUser) throw Error;
 
     return currentUser.documents[0];
-  } catch (error) {
-    console.log(error);
+  } catch (error: any) {
+    throw new Error();
   }
 };
 
@@ -160,6 +160,47 @@ export const getUserPosts = async (userId: string) => {
   }
 };
 
+export const getLikedVideos = async () => {
+  try {
+    const likedVideos = await database.listDocuments(
+      databaseId,
+      videoCollectionId,
+      [Query.equal("liked", true), Query.orderDesc("$createdAt")]
+    );
+    return likedVideos.documents;
+  } catch (error: any) {
+    throw new Error("Failed to fetch liked videos");
+  }
+};
+
+export const likeVideo = async (videoId: string) => {
+  try {
+    const updatedVideo = await database.updateDocument(
+      databaseId,
+      videoCollectionId,
+      videoId,
+      { liked: true }
+    );
+    return updatedVideo;
+  } catch (error: any) {
+    throw new Error("Failed to like the video");
+  }
+};
+
+export const unlikeVideo = async (videoId: string) => {
+  try {
+    const updatedVideo = await database.updateDocument(
+      databaseId,
+      videoCollectionId,
+      videoId,
+      { liked: false }
+    );
+    return updatedVideo;
+  } catch (error: any) {
+    throw new Error("Failed to unlike the video");
+  }
+};
+
 export const signOut = async () => {
   try {
     const session = await account.deleteSession("current");
@@ -206,8 +247,8 @@ export const uploadFile = async (file: any, type: string) => {
 
   const asset = {
     name: file.fileName,
-    type: file.mineType,
-    size: file.size,
+    type: file.mimeType,
+    size: file.fileSize,
     uri: file.uri,
   };
 
@@ -217,6 +258,7 @@ export const uploadFile = async (file: any, type: string) => {
       ID.unique(),
       asset
     );
+
     const fileUrl = await getFilePreview(uploadedFile.$id, type);
     return fileUrl;
   } catch (error: any) {
@@ -239,7 +281,7 @@ export const createVideo = async (formData: FormUploadVideoAppwrite) => {
         title: formData.title,
         thumbnail: thumbnailUrl,
         video: videoUrl,
-        prompt: formData.prompt,
+        // prompt: formData.prompt,
         creator: formData.userId,
       }
     );
@@ -247,5 +289,19 @@ export const createVideo = async (formData: FormUploadVideoAppwrite) => {
     return newPost;
   } catch (error: any) {
     throw new Error();
+  }
+};
+
+export const deleteVideo = async (videoId: string) => {
+  try {
+    const deletedVideo = await database.deleteDocument(
+      databaseId,
+      videoCollectionId,
+      videoId
+    );
+
+    return deletedVideo;
+  } catch (error: any) {
+    throw new Error("Failed to delete the video");
   }
 };

@@ -9,6 +9,7 @@ export type Post = {
   creator: {
     username: string;
     avatar: string;
+    accountId: string;
   };
 };
 

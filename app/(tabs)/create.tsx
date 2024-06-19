@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Image,
   Alert,
+  Platform,
 } from "react-native";
 import React, { useState } from "react";
 import FormField from "@/components/FormField";
@@ -23,7 +24,7 @@ type Form = {
   title: string;
   video: null | { uri: string };
   thumbnail: null | { uri: string };
-  prompt: string;
+  // prompt: string;
 };
 
 export interface FormUploadVideoAppwrite extends Form {
@@ -37,7 +38,7 @@ const Create = () => {
     title: "",
     video: null,
     thumbnail: null,
-    prompt: "",
+    // prompt: "",
   });
 
   const openPicker = async (selectType: "image" | "video") => {
@@ -66,7 +67,7 @@ const Create = () => {
   };
 
   const submit = async () => {
-    if (!form.prompt || !form.thumbnail || !form.title || !form.video) {
+    if (!form.thumbnail || !form.title || !form.video) {
       return Alert.alert("Error", "Please fill in all the fields");
     }
 
@@ -77,13 +78,14 @@ const Create = () => {
       Alert.alert("Success", "Post Upload successfully");
       router.push("/home");
     } catch (error: any) {
+      console.log(error);
       Alert.alert("Error", error.message);
     } finally {
       setForm({
         title: "",
         video: null,
         thumbnail: null,
-        prompt: "",
+        // prompt: "",
       });
       setUploading(false);
     }
@@ -92,7 +94,13 @@ const Create = () => {
   return (
     <SafeAreaView className="bg-primary h-full">
       <ScrollView className="px-4 my-6">
-        <Text className="text-white font-psemibold text-2xl">Upload video</Text>
+        <Text
+          className={`${
+            Platform.OS === "android" ? "pt-8" : ""
+          }  text-2xl text-white font-psemibold`}
+        >
+          Upload video
+        </Text>
 
         <FormField
           title="Video Title"
@@ -155,13 +163,13 @@ const Create = () => {
           </TouchableOpacity>
         </View>
 
-        <FormField
+        {/* <FormField
           title="AI Prompt"
           value={form.prompt}
           placeholder="The prompt you used to create this video"
           handleChangeText={(e) => setForm({ ...form, prompt: e })}
           otherStyles="mt-7"
-        />
+        /> */}
 
         <CustomButton
           title="Submit and Publish"

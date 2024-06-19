@@ -6,14 +6,28 @@ import { useGlobalContext } from "@/context/GlobalProvider";
 import useAppwrite from "@/hooks/useAppwrite";
 import { getUserPosts, signOut } from "@/lib/appwrite";
 import { router } from "expo-router";
-import React, { useEffect } from "react";
-import { FlatList, Image, TouchableOpacity, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { RefreshControl } from "react-native";
+import {
+  FlatList,
+  Image,
+  Platform,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const Profile = () => {
   const { user, setUser, setIsLoggedIn } = useGlobalContext();
+  const [refreshing, setRefreshing] = useState(false);
 
   const { data: posts, refetch } = useAppwrite(() => getUserPosts(user.$id));
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await refetch();
+    setRefreshing(false);
+  };
 
   useEffect(() => {
     refetch();
@@ -80,6 +94,13 @@ const Profile = () => {
             subtitle="No videos found for this search query"
           />
         )}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            tintColor={Platform.OS === "ios" ? "#FFFFFF" : "#000000"}
+          />
+        }
       />
     </SafeAreaView>
   );

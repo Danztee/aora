@@ -7,9 +7,11 @@ import { router } from "expo-router";
 const EmptyState = ({
   subtitle,
   title,
+  showBtn = true,
 }: {
   subtitle: string;
   title: string;
+  showBtn?: boolean;
 }) => {
   return (
     <View className="justify-center items-center px-4">
@@ -24,11 +26,13 @@ const EmptyState = ({
       <Text className="font-pmedium text-sm text-gray-100 mt-2">
         {subtitle}
       </Text>
-      <CustomButton
-        title="Create Video"
-        handlePress={() => router.push("/create")}
-        containerStyles="w-full my-5"
-      />
+      {showBtn && (
+        <CustomButton
+          title="Create Video"
+          handlePress={() => router.push("/create")}
+          containerStyles="w-full my-5"
+        />
+      )}
     </View>
   );
 };

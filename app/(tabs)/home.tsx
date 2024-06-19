@@ -7,6 +7,7 @@ import { useGlobalContext } from "@/context/GlobalProvider";
 import useAppwrite from "@/hooks/useAppwrite";
 import { getAllPosts, getLatestPosts } from "@/lib/appwrite";
 import React, { useState } from "react";
+import { Platform } from "react-native";
 import { FlatList, Image, RefreshControl, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -69,7 +70,11 @@ const Home = () => {
           />
         )}
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            tintColor={Platform.OS === "ios" ? "#FFFFFF" : "#000000"}
+          />
         }
       />
     </SafeAreaView>
